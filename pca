@@ -1,0 +1,41 @@
+#Principle component analysis on Hitters data.
+
+Preprocessing the data
+library(ISLR)
+dim(Hitters)
+
+Removing the N/A values.
+Hitters <- na.omit(Hitters)
+
+Converting names of the player into numbers for better results in the biplot.
+row.names(Hitters)= 1:263
+
+Creating dummy representation of the catagorical data in the data, predictors having catagorical data are league, division and new league
+Hitters$League <- ifelse(Hitters$League=="N", 1, 2)
+Hitters$Division <- ifelse(Hitters$Division=="W", 1, 2)
+Hitters$NewLeague <- ifelse(Hitters$NewLeague=="N", 1, 2)
+
+Now, salary is the response and rest variables are predictors. We wont consider salary. So the matrix becomes 263x19.
+library(dplyr)
+train = select(Hitters, -Salary)
+dim(train)
+
+Does the data require standardization? 
+apply(train, 2, mean)
+apply(train, 2, sd) 
+
+YES, the data need to be standardized, as the variables scales vary significantly.
+
+PCA, TABLES AND GRAPH
+head(train)
+str(train)
+pca <- prcomp(train, center = T, scale = T)
+summary(pca)
+
+pc.var <- pca$sdev^2
+pve <- pc.var/sum(pc.var)
+pve
+cumsum(pve)
+
+
+
